@@ -1,0 +1,8 @@
+[project]
+name = "90sgs"
+version = "0.1.0"
+requires-python = ">=3.14"
+dependencies = [
+  "moderngl>=5.13.0",
+  "pygame-ce>=2.5.8",
+]
