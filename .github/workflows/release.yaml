@@ -49,13 +49,12 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y \
             libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev \
-            libgl1-mesa-dev libfuse2 python3-pil
-          # python3-pil fornece o Pillow para gerar o ícone PNG
+            libgl1-mesa-dev libfuse2
 
       - name: Install Python Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pygame-ce moderngl pyinstaller numpy
+          pip install pygame-ce moderngl pyinstaller numpy Pillow
 
       - name: Build with PyInstaller
         run: pyinstaller 90sgs.spec
@@ -65,7 +64,7 @@ jobs:
           mkdir -p AppDir/usr/bin
           cp dist/90sgs AppDir/usr/bin/90sgs
 
-          # Arquivo AppRun — OBRIGATÓRIO para o AppImage abrir
+
           cat > AppDir/AppRun <<'EOF'
           #!/bin/bash
           HERE="$(dirname "$(readlink -f "$0")")"
@@ -73,7 +72,6 @@ jobs:
           EOF
           chmod +x AppDir/AppRun
 
-          # Arquivo .desktop
           cat > AppDir/90sgs.desktop <<'EOF'
           [Desktop Entry]
           Name=90 Seconds
@@ -83,7 +81,6 @@ jobs:
           Categories=Game;
           EOF
 
-          # Ícone PNG (gera um placeholder 256x256 com Pillow)
           python -c "from PIL import Image; Image.new('RGB', (256,256), color=(20,20,20)).save('AppDir/90sgs.png')"
 
       - name: Download appimagetool
@@ -94,7 +91,6 @@ jobs:
 
       - name: Build AppImage
         run: |
-          # --appimage-extract-and-run evita falha por FUSE ausente no runner
           ./appimagetool --appimage-extract-and-run AppDir 90sgs-x86_64.AppImage
 
       - name: Upload Linux AppImage
