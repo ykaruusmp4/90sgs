@@ -1,5 +1,3 @@
-"""Raycasting: DDA, hit test e cast em lote por coluna."""
-
 from .caster import cast_column, cast_row
 from .dda import cast
 from .hit import Hit

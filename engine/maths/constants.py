@@ -1,5 +1,3 @@
-"""Constantes matemáticas reutilizáveis — ponto único de import."""
-
 import math
 
 PI = math.pi

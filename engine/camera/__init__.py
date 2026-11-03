@@ -1,5 +1,3 @@
-"""Câmera e projeção: plane, smoothing e helpers de mundo→tela."""
-
 from .camera import Camera, screen_column
 from .plane import make_plane, projection_inverse
 from .smoothing import Smoothed, approach, damp, damp_angle

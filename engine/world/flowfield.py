@@ -6,7 +6,6 @@ DIRS8 = ((1, 0), (-1, 0), (0, 1), (0, -1), (1, 1), (1, -1), (-1, 1), (-1, -1))
 
 
 class FlowField:
-    """Gera um campo de distâncias BFS a partir do jogador. Monstros só precisam olhar pros vizinhos."""
 
     def __init__(self, grid: Grid):
         self.grid = grid
@@ -25,7 +24,6 @@ class FlowField:
                 for dx, dy in DIRS8:
                     if not livre(x + dx, y + dy):
                         continue
-                    # Evita cortar quina de parede em diagonal
                     if dx and dy and not (livre(x + dx, y) and livre(x, y + dy)):
                         continue
                     lista.append((y + dy) * n + (x + dx))
@@ -66,7 +64,6 @@ class FlowField:
             if d < 0 or d >= atual:
                 continue
             jx, jy = j % self.n, j // self.n
-            # Desempata pela distância euclidiana (deixa o movimento menos quadrado)
             k = (d, (jx - self.origem % self.n) ** 2 + (jy - self.origem // self.n) ** 2)
             if chave is None or k < chave:
                 melhor, chave = (jx, jy), k

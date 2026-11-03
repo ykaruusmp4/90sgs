@@ -1,5 +1,3 @@
-"""Matemática reutilizável da engine: escalares, ângulos e vetores 2D."""
-
 from .angles import damp_angle, delta, lerp_angle, normalize
 from .constants import EPS, HALF_PI, PI, QUARTER_PI, TAU
 from .scalars import (

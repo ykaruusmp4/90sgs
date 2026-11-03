@@ -15,22 +15,18 @@ def draw_minimap(
     ox = surf.get_width() - w - 4
     oy = 4
 
-    # Fundo
     pg.draw.rect(surf, (14, 14, 16), (ox, oy, w, w))
 
-    # Paredes
     for y in range(n):
         for x in range(n):
             if grid.cells[y][x] == grid.solid:
                 pg.draw.rect(surf, (60, 60, 65), (ox + x * scale, oy + y * scale, scale, scale))
 
-    # Player
     cx = px / block_size
     cy = py / block_size
     p_x = ox + cx * scale
     p_y = oy + cy * scale
 
-    # Cone de visão
     comp = 6
     for ang in (angle - fov / 2, angle + fov / 2):
         pg.draw.line(surf, (0, 255, 255), (p_x, p_y), (p_x + math.cos(ang) * comp, p_y + math.sin(ang) * comp), 1)

@@ -1,13 +1,3 @@
-"""Grid quadrado de células. Wrapper fino em volta de `list[list[int]]`.
-
-O atributo `.cells` continua exposto direto pro hot path (raycaster, colisão)
-fazer `cells[y][x]` sem overhead de método. Os helpers existem pro cold path
-(geração, BFS, spawn, queries).
-
-Não guarda tamanho de bloco em pixels — isso é responsabilidade do `game/`,
-junto com a conversão cell↔pixel.
-"""
-
 from __future__ import annotations
 
 from typing import Iterator

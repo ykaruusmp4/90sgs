@@ -1,5 +1,3 @@
-"""Consultas de grid: BFS, regiões conexas, posições de spawn."""
-
 from __future__ import annotations
 
 from collections import deque
@@ -80,7 +78,6 @@ def find_start_cell(grid: Grid) -> tuple[int, int]:
 
 
 def has_line_of_sight(x0: float, y0: float, x1: float, y1: float, grid: Grid, block_size: float) -> bool:
-    """True se a linha reta (x0,y0)→(x1,y1) não cruza parede."""
     dx = x1 - x0
     dy = y1 - y0
     d = (dx * dx + dy * dy) ** 0.5

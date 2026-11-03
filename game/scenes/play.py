@@ -64,13 +64,13 @@ class PlayScene(Scene):
     def enter(self) -> None:
         pg.event.set_grab(True)
         pg.mouse.set_visible(False)
-        pg.mouse.get_rel()  # Limpa o acumulado de antes de entrar
+        pg.mouse.get_rel()
 
         if self.app.audio:
             self.app.audio.tocar_ambiente("ambiente")
-            self.app.audio.tocar("nivel")
 
-        self.load_level(1)
+        if self.level is None:
+            self.iniciar_novo_jogo()
 
     def exit(self) -> None:
         pg.event.set_grab(False)
@@ -78,6 +78,12 @@ class PlayScene(Scene):
 
         if self.app.audio:
             self.app.audio.parar_ambiente()
+
+    def iniciar_novo_jogo(self) -> None:
+        """Chamado pelo HowToScene ou como fallback no enter(). Sempre começa no nível 1."""
+        self.load_level(1)
+        if self.app.audio:
+            self.app.audio.tocar("nivel")
 
     def load_level(self, numero: int) -> None:
         self.level = Level(self.seed, numero)
@@ -107,7 +113,6 @@ class PlayScene(Scene):
         self.tempo_restante -= dt
         self.flash_dano = max(0.0, self.flash_dano - dt)
 
-        # 1. Checar Derrota
         msg_derrota = checar_derrota(self.tempo_restante, self.player.hp)
         if msg_derrota:
             if self.app.audio:
@@ -116,7 +121,6 @@ class PlayScene(Scene):
             self.app.change_scene("FIM")
             return
 
-        # 2. Atualizar Player e Áudio de Passos
         keys = pg.key.get_pressed()
         mouse_dx, _ = pg.mouse.get_rel()
         self.player.update(keys, mouse_dx, dt, self.level.grid)
@@ -129,7 +133,6 @@ class PlayScene(Scene):
                 vol_passo = 0.6 + 0.4 * self.player.correndo_suave
                 self.app.audio.tocar(f"passo{meio_ciclo % 2}", vol_passo)
 
-        # 3. Coleta de Orbs
         for orb in self.orbs:
             if not orb.coletado and math.hypot(orb.x - self.player.x, orb.y - self.player.y) < RAIO_COLETA:
                 orb.coletado = True
@@ -137,7 +140,6 @@ class PlayScene(Scene):
                     feitos = sum(1 for o in self.orbs if o.coletado)
                     self.app.audio.tocar(f"orb{(feitos - 1) % 3}")
 
-        # 4. Checar Vitória
         if checar_vitoria(self.orbs):
             prox = proximo_nivel(self.level.numero)
             if prox:
@@ -149,12 +151,10 @@ class PlayScene(Scene):
                 self.app.change_scene("VITORIA")
             return
 
-        # 5. Despertar dos Monstros
         if antes < ATRASO_MONSTROS <= self.tempo_nivel:
             if self.app.audio:
                 self.app.audio.tocar("despertar")
 
-        # 6. Atualizar Monstros, Dano e Coração
         if self.tempo_nivel >= ATRASO_MONSTROS:
             p_cx = int(self.player.x // TAMANHO_BLOCO)
             p_cy = int(self.player.y // TAMANHO_BLOCO)
@@ -171,7 +171,6 @@ class PlayScene(Scene):
                     if self.app.audio:
                         self.app.audio.tocar("dano")
 
-            # Cálculo do Coração (menor distância de caminho via BFS)
             melhor_passos = None
             for m in self.monstros:
                 d = self.flowfield.dist[int(m.y // TAMANHO_BLOCO) * self.flowfield.n + int(m.x // TAMANHO_BLOCO)]
@@ -190,7 +189,6 @@ class PlayScene(Scene):
         W = surface.get_width()
         t = pg.time.get_ticks() / 1000.0
 
-        # 1. Mundo 3D
         draw_background(surface, self.level.background, bob_y=j.bobbing_y, tilt=j.tilt)
         draw_walls(
             surface,
@@ -202,10 +200,8 @@ class PlayScene(Scene):
             tilt=j.tilt,
         )
 
-        # 2. Entidades (Billboards)
         items = []
 
-        # Orbs
         for orb in self.orbs:
             if orb.coletado:
                 continue
@@ -226,7 +222,6 @@ class PlayScene(Scene):
             cy = horizon_y(H) + j.bobbing_y + lh * (0.15 + 0.04 * math.sin(t * 2.0 + orb.fase))
             items.append(Billboard(perp, sx, spr, cy, anchor="center", flags=pg.BLEND_RGB_ADD))
 
-        # Monstros
         for m in self.monstros:
             p = screen_column(j.camera, m.bx, m.by, W)
             if p is None:
@@ -250,7 +245,6 @@ class PlayScene(Scene):
         sort_by_perp_desc(items)
         draw_billboards(surface, items, self.zbuffer)
 
-        # 3. HUD e Minimapa
         draw_minimap(surface, self.level.grid, j.x, j.y, j.camera.angle, j.camera.fov, TAMANHO_BLOCO)
 
         ox, oy = W - self.level.grid.n * 2 - 4, 4

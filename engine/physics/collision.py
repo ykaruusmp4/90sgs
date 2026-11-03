@@ -1,10 +1,3 @@
-"""Colisão círculo × grid (células sólidas).
-
-Só considera a vizinhança 3x3 ao redor da célula atual — o raio do corpo é
-sempre menor que `block_size / 2` na prática (14 < 32), então nada além disso
-pode intersectar. Fora do grid = sólido (mesmo tratamento do original).
-"""
-
 from __future__ import annotations
 
 from ..world.grid import Grid

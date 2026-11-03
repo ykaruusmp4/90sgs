@@ -13,7 +13,6 @@ def spawn_orbs(grid: Grid, start_x: float, start_y: float, seed: str, quantidade
     cx, cy = int(start_x // TAMANHO_BLOCO), int(start_y // TAMANHO_BLOCO)
     distancias = bfs_distances(grid, (cx, cy))
 
-    # Filtra pra ficar entre 6 e 18 blocos de distância (nem de graça, nem no fim do mundo)
     candidatos = [c for c, d in distancias.items() if 6 <= d <= 18]
 
     if len(candidatos) < quantidade:

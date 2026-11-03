@@ -1,9 +1,3 @@
-"""Framebuffer virtual — a `pygame.Surface` que os passes desenham.
-
-Não confundir com a `pipeline.py`, que faz o upload pra GPU. Aqui é só o
-"buffer lógico" e o acesso aos bytes pra upload.
-"""
-
 from __future__ import annotations
 
 import pygame as pg
@@ -21,5 +15,4 @@ class FrameBuffer:
         self.surface.fill(color)
 
     def to_bytes(self, formato: str = "RGBA") -> bytes:
-        """Bytes pra upload de textura. `flip_y=True` porque pygame é top-down."""
         return pg.image.tobytes(self.surface, formato, True)

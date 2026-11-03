@@ -1,5 +1,3 @@
-"""Ângulos em radianos, sempre normalizados para (-pi, pi]."""
-
 from .constants import PI, TAU
 
 
@@ -8,7 +6,6 @@ def normalize(a: float) -> float:
 
 
 def delta(a: float, b: float) -> float:
-    """Menor deslocamento angular com sinal, de `b` para `a`."""
     return normalize(a - b)
 
 
@@ -17,6 +14,5 @@ def lerp_angle(a: float, b: float, t: float) -> float:
 
 
 def damp_angle(current: float, target: float, decay: float, dt: float, ref_fps: float = 60.0) -> float:
-    """Igual a `scalars.damp`, mas respeitando wrap-around em ±pi."""
     d = delta(target, current)
     return normalize(current + d * (1.0 - decay ** (dt * ref_fps)))

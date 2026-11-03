@@ -22,6 +22,7 @@ class HowToScene(Scene):
             elif event.key in (pg.K_RETURN, pg.K_KP_ENTER):
                 if self.app.audio:
                     self.app.audio.tocar("select")
+                self.app.scenes["JOGO"].iniciar_novo_jogo()
                 self.app.change_scene("JOGO")
 
     def draw(self, surface: pg.Surface) -> None:

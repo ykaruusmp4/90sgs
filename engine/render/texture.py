@@ -1,5 +1,3 @@
-"""Geração procedural de superfícies (fundo, parede). Sem arquivos externos."""
-
 from __future__ import annotations
 
 import random
@@ -18,10 +16,6 @@ def background(
     escuro_no_meio: float = 0.4,
     claro_nas_pontas: float = 1.4,
 ) -> pg.Surface:
-    """Degradê vertical teto→chão. Escuro no horizonte (meio), mais claro nas bordas.
-
-    Mesmo efeito da `gerar_fundo` original, mas recebendo cores em vez de paleta.
-    """
     surf = pg.Surface((width, height))
     meio = height // 2
     for y in range(height):
@@ -47,7 +41,6 @@ def wall_texture(
     argamassa_fator: float = 0.22,
     variacao_grao: int = 260,
 ) -> pg.Surface:
-    """Tijolos procedurais com semente. Mesmo padrão da `gerar_textura_parede` original."""
     rng = random.Random(seed)
     argamassa = tuple(clamp255(c * argamassa_fator) for c in base)
     tex = pg.Surface((size, size))
@@ -71,7 +64,6 @@ def wall_texture(
 
 
 def radial_glow(cor: RGB, size: int = 32) -> pg.Surface:
-    """Halo radial + núcleo quase branco. Fundo preto (pra usar com BLEND_RGB_ADD)."""
     surf = pg.Surface((size, size))
     surf.fill((0, 0, 0))
     c = (size - 1) / 2

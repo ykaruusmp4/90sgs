@@ -1,18 +1,3 @@
-"""Orquestrador: janela, framebuffer, pipeline, clock, cenas.
-
-O App NÃO sabe de mundo, HUD, sprites ou levels — isso é responsabilidade das
-cenas do jogo. Ele só guarda:
-
-    - o framebuffer virtual (Surface)
-    - o pipeline de shader (upload + post-process)
-    - o clock
-    - a cena atual + registro de cenas
-    - flags que o shader lê por frame: `crt_on`, `aberracao`, `perigo`
-
-`aberracao` e `perigo` são zerados antes de cada `update` — a cena os seta
-durante o update, e o shader os consome no fim do frame.
-"""
-
 from __future__ import annotations
 
 import pygame as pg

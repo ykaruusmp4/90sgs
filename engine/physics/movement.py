@@ -1,10 +1,3 @@
-"""Movimento com colisão: sub-passos (evita tunneling) + slide por eixo.
-
-Mesmo algoritmo da `mover_com_colisao` original: divide o deslocamento em
-tamanhos ≤ 12px, testa x e y separadamente, zera a velocidade no eixo que
-bateu (permite deslizar).
-"""
-
 from __future__ import annotations
 
 import math

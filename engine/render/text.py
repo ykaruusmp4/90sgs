@@ -1,7 +1,3 @@
-"""Renderização de texto sobre uma `pygame.Surface`. API compatível com a original
-(`put_text`, `put_text_centered`, `put_text_wave`), mas como funções livres em vez
-de métodos de HUD."""
-
 from __future__ import annotations
 
 import math
@@ -70,7 +66,6 @@ def put_text_wave(
     espacamento: int = ESPACO_PADRAO,
     amplitude: float = 2.0,
 ) -> None:
-    """Cada letra ondula em seno. Bom pra títulos animados."""
     largura = (len(text) * espacamento) - (espacamento - font.largura)
     x = (surf.get_width() - largura) // 2
     for i, ch in enumerate(text):

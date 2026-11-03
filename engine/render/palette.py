@@ -1,5 +1,3 @@
-"""Helpers de cor. Paletas concretas (céu, chão, parede) são do jogo."""
-
 from __future__ import annotations
 
 RGB = tuple[int, int, int]
@@ -10,12 +8,10 @@ def clamp255(v: float) -> int:
 
 
 def scale(rgb: RGB, f: float) -> RGB:
-    """Escala float + clamp — cobre o `min(255, int(c * fator))` inline da original."""
     return (clamp255(rgb[0] * f), clamp255(rgb[1] * f), clamp255(rgb[2] * f))
 
 
 def scale_int(rgb: RGB, k: int) -> RGB:
-    """Divisão inteira — cobre `tuple(c // 3 for c in cor)` etc."""
     return (rgb[0] // k, rgb[1] // k, rgb[2] // k)
 
 

@@ -1,5 +1,3 @@
-"""Wall cast: DDA por coluna + amostragem de textura + fog."""
-
 from __future__ import annotations
 
 import math
@@ -26,8 +24,6 @@ def draw(
     tilt: float = 0.0,
     margin: int = 24,
 ) -> None:
-    """Desenha as paredes sobre a surface. Não toca no fundo — chamar o
-    `background_pass` antes. Colunas sem hit ficam com `zbuffer = INF`."""
     w = surf.get_width()
     h = surf.get_height()
     tex_w = texture.get_width()

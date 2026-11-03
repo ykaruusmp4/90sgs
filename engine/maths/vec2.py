@@ -1,9 +1,3 @@
-"""Vetor 2D imutável. Use em câmera, direções de raio e posições de spawn.
-
-Posições "quentes" (player/monstro no update) podem continuar em floats soltos
-pra evitar alocar por frame — Vec2 é imutável de propósito.
-"""
-
 from __future__ import annotations
 
 import math

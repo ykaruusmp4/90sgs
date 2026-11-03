@@ -1,5 +1,3 @@
-"""Jogador: corpo (física) + câmera (visão)."""
-
 from __future__ import annotations
 
 import math
@@ -22,8 +20,8 @@ from game.config.constants import TAMANHO_BLOCO
 from game.entities.entity import Entity
 
 STAMINA_MAX = 100.0
-STAMINA_GASTO = 45.0  # por segundo correndo
-STAMINA_REGEN = 20.0  # por segundo parado/andando
+STAMINA_GASTO = 45.0
+STAMINA_REGEN = 20.0
 
 
 class Player(Entity):
@@ -55,7 +53,6 @@ class Player(Entity):
         b = self.body
         cam = self.camera
 
-        # --- Rotação: mouse + setas ---
         if mouse_dx:
             self._set_angle(self._angle() + mouse_dx * SENSIBILIDADE_MOUSE)
         if keys[pg.K_LEFT]:
@@ -75,7 +72,7 @@ class Player(Entity):
 
         ang = self._angle()
         fx, fy = math.cos(ang), math.sin(ang)
-        rx, ry = -fy, fx  # right = perp de forward (y pra baixo → roda 90°)
+        rx, ry = -fy, fx
 
         dx = dy = 0.0
         alvo_tilt = 0.0
@@ -104,7 +101,6 @@ class Player(Entity):
             dx /= mag
             dy /= mag
 
-        # --- Aceleração snappy (damp) ---
         target_speed = VEL_FRAME_CORRIDA if correndo else VEL_FRAME_ANDAR
         if andou:
             b.vx = damp(b.vx, dx * target_speed, 0.55, dt)
@@ -113,7 +109,6 @@ class Player(Entity):
             b.vx = damp(b.vx, 0.0, 0.5, dt)
             b.vy = damp(b.vy, 0.0, 0.5, dt)
 
-        # --- Stamina ---
         if correndo and andou:
             self.stamina = max(0.0, self.stamina - STAMINA_GASTO * dt)
         else:

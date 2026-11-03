@@ -1,5 +1,3 @@
-"""Mundo: grid de células, consultas BFS e geração procedural."""
-
 from .cell import FLOOR, WALL, Cell
 from .generator import generate, seed_to_int
 from .grid import Grid

@@ -1,15 +1,3 @@
-"""Geração procedural de mapa — porte direto do `map_generator.py` original.
-
-Pipeline:
-  1. Preenche com paredes aleatórias (densidade configurável), borda sempre sólida.
-  2. Suaviza com autômato celular (4 iterações, 3x3, >4 vizinhos vira parede).
-  3. Mantém só a maior região livre (tampa cavernas isoladas).
-  4. Fallback: cava um quadrado central se sobrarem < 40 células livres.
-
-Aceita `seed` como `int` ou `str`; se `str`, vira `int` via MD5 — assim a mesma
-string de seed gera o mesmo mapa, batendo com o comportamento original.
-"""
-
 from __future__ import annotations
 
 import hashlib
@@ -54,7 +42,6 @@ def _random_fill(rng: random.Random, size: int, density: float) -> list[list[int
 
 
 def _smooth(cells: list[list[int]]) -> list[list[int]]:
-    """Um passo de autômato celular. Lê de `cells`, escreve em `novo`."""
     n = len(cells)
     novo = [row[:] for row in cells]
     for y in range(1, n - 1):

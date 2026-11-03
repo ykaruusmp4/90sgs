@@ -1,11 +1,3 @@
-"""Z-buffer por coluna — guarda a distância perpendicular da parede em cada x.
-
-Convenção (mesma da original):
-    - Antes do wall pass: valores grandes (infinito prático)
-    - Depois:           `perp` do `Hit` naquele x
-    - Sprite pass:      só blita coluna x se `sprite_perp < z.data[x]`
-"""
-
 from __future__ import annotations
 
 INF = 1e30

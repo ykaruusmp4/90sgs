@@ -1,5 +1,3 @@
-"""Raio em espaço de mundo."""
-
 from dataclasses import dataclass
 
 

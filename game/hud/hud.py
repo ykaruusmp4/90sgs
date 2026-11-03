@@ -70,11 +70,9 @@ class HUD:
         W = surf.get_width()
         H = surf.get_height()
 
-        # Seed no canto inferior esquerdo
         if seed:
             put_text(surf, self.font, f"SEED {seed}", 4, H - 14, color_idx=CINZA)
 
-        # Versão no canto inferior direito
         x_versao = W - len(VERSAO) * 7 - 4
         put_text(surf, self.font, VERSAO, x_versao, H - 14, color_idx=CINZA)
 

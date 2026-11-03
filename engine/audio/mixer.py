@@ -47,7 +47,6 @@ class Mixer:
             self._aplicar_volume_som(som)
 
     def coracao(self, dt: float, passos: int | None):
-        """Toca o som do coração se o monstro estiver a menos de 16 blocos."""
         if passos is None or passos >= 16:
             self._coracao_t = 0.0
             return
@@ -55,7 +54,6 @@ class Mixer:
         k = (16 - max(passos, 3)) / (16 - 3)
         self._coracao_t += dt
 
-        # Quanto mais perto, mais rápido bate (de 1.15s até 0.35s)
         if self._coracao_t >= 1.15 - 0.80 * k:
             self._coracao_t = 0.0
             self.tocar("coracao", 0.35 + 0.65 * k)

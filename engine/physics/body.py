@@ -1,10 +1,3 @@
-"""Corpo físico: posição, velocidade e raio de colisão.
-
-Convenção de unidades: `vx/vy` em **px por frame a 60fps**. Multiplicar por
-`dt * 60` converte pra px neste frame. Bate com a engine original, onde
-`vel_terminal()` retornava px/s e o update usava `k = dt * 60`.
-"""
-
 from __future__ import annotations
 
 

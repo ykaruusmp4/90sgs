@@ -1,5 +1,3 @@
-"""Render: framebuffer, texturas, fonte, passes de raycast e pipeline GPU."""
-
 from .background_pass import draw as draw_background
 from .bitmap_font import COR_SOMBRA, BitmapFont
 from .framebuffer import FrameBuffer

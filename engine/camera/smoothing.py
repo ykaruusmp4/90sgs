@@ -1,9 +1,3 @@
-"""Re-export de damp/approach pra quem estiver trabalhando no lado da câmera.
-
-O helper `Smoothed` conveniência: guarda `value` e chama `to(target, dt)`
-a cada update (útil pra FOV, tilt, correndo_suave, etc.).
-"""
-
 from __future__ import annotations
 
 from ..maths.angles import damp_angle

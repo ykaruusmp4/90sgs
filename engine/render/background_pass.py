@@ -1,10 +1,3 @@
-"""Desenha o fundo pré-renderizado (teto+chão) com parallax de bob/tilt.
-
-O fundo é uma Surface mais alta que a tela (`altura + 2*margem`) — a margem
-extra permite deslocar a coluna verticalmente sem mostrar borda. Cada coluna
-é deslocada por `bob + (x - w/2) * tilt`, exatamente como a original.
-"""
-
 from __future__ import annotations
 
 import pygame as pg

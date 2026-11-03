@@ -1,14 +1,3 @@
-"""DDA: caminhamento célula-a-célula até achar uma parede.
-
-Fórmula de `perp` na convenção Lode: `(mapX - px + (1-stepX)/2) / rayDirX`
-dá a distância perpendicular ao plano da câmera **e** também o parâmetro
-`t` ao longo do raio, porque rayDir satisfaz `rayDir · direction = 1`.
-
-`wall_x` já sai flipado (mesma regra da engine original):
-    lado 0 e dx > 0  → 1 - fract
-    lado 1 e dy < 0  → 1 - fract
-"""
-
 from __future__ import annotations
 
 import math
@@ -20,7 +9,6 @@ from .ray import Ray
 
 
 def cast(grid: Grid, ray: Ray, max_steps: int | None = None) -> Hit | None:
-    """DDA contra `grid`. Devolve `Hit` ou `None` se o raio escapar do mapa."""
     n = grid.n
     cells = grid.cells
     solid = grid.solid

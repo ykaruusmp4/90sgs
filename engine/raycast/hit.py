@@ -1,5 +1,3 @@
-"""Resultado de um cast contra o grid."""
-
 from dataclasses import dataclass
 
 

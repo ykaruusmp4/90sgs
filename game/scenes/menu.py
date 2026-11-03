@@ -41,7 +41,6 @@ class MenuScene(Scene):
         crt_txt = f"CRT {'ON' if self.app.crt_on else 'OFF'}"
         opcoes = ["START", crt_txt, "EXIT"]
 
-        # Pega a seed do app se existir, senão usa a padrão
         seed_str = getattr(self.app, "seed", "x9z2r7w1")
 
         self.app.hud.draw_menu(surface, "90 SECONDS", opcoes, self.opcao, t, seed=seed_str)

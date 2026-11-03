@@ -1,13 +1,10 @@
-"""Exceções da engine."""
-
-
 class EngineError(Exception):
-    """Base para erros da engine."""
+    pass
 
 
 class ResourceError(EngineError):
-    """Shader, fonte, textura ou outro recurso ausente/inválido."""
+    pass
 
 
 class SceneError(EngineError):
-    """Cena não registrada, registro duplicado ou troca inválida."""
+    pass

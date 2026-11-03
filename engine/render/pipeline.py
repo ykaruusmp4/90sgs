@@ -1,8 +1,3 @@
-"""Pipeline GPU: upload do framebuffer + post-process shader (CRT, aberração, perigo).
-
-Shader loader com expansão de `#include "x"` foi absorvido aqui — único consumidor.
-"""
-
 from __future__ import annotations
 
 import re
@@ -92,7 +87,6 @@ class ShaderPipeline:
             self.programa[nome].value = valor
 
     def _ajustar_viewport(self) -> None:
-        """Mantém proporção virtual em qualquer janela; barras pretas sobram."""
         w, h = pg.display.get_window_size()
         escala = min(w / self.largura, h / self.altura)
         vw = max(1, int(self.largura * escala))

@@ -1,11 +1,3 @@
-"""Fonte bitmap parseada de arquivo + cache de glifos por cor.
-
-Formato do arquivo (P16font.txt): cada linha = `codigo_hex,row0,row1,...,rowN`.
-Cada `row` é uma máscara de 8 bits (bit 7 = coluna 0).
-
-`COR_SOMBRA = -1` é o índice especial reservado pra sombra.
-"""
-
 from __future__ import annotations
 
 import pygame as pg
@@ -56,12 +48,10 @@ class BitmapFont:
             for code, rows in self.data.items():
                 bucket[code] = self._raster(rows, rgb)
 
-            # O chapeu usa os mesmos bits só que menor (2 linhas)
             bucket["chapeu"] = self._raster([0x0C, 0x1E], rgb)
             self.cache[color_idx] = bucket
 
     def _raster(self, rows: list[int], rgb: tuple[int, int, int]) -> pg.Surface:
-        """Desenha uma lista de bytes (máscaras de 8 bits) numa Surface."""
         w = self.largura
         h = len(rows)
         surf = pg.Surface((w, max(h, self.altura)), pg.SRCALPHA)

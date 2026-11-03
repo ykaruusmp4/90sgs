@@ -1,9 +1,3 @@
-"""Clock com clamp de dt — evita salto de física em lag spike.
-
-O clamp em `max_dt` (default 1/30) bate com o `min(tick/1000, 1/30)` da
-engine original. Se um frame demorar 200ms, o jogo avança só 33ms.
-"""
-
 from __future__ import annotations
 
 import pygame as pg
@@ -18,7 +12,6 @@ class Clock:
         self.max_dt = max_dt
 
     def tick(self) -> float:
-        """Avança um frame. Devolve `dt` em segundos, clampado em `max_dt`."""
         return min(self._clock.tick(self.target_fps) / 1000.0, self.max_dt)
 
     @property

@@ -1,9 +1,3 @@
-"""Nível: grid + textura + fundo + posição inicial do player.
-
-Cada nível é derivado deterministicamente de `f"{seed}#{nivel}"` — mesma
-seed, mesmo mapa, mesma paleta. Paleta rotaciona por módulo.
-"""
-
 from __future__ import annotations
 
 from engine.render import background, wall_texture
