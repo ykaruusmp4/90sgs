@@ -2,7 +2,7 @@ import math
 
 import pygame as pg
 
-from engine.render import BitmapFont, put_text, put_text_centered, put_text_wave
+from engine.render import BitmapFont, medir_texto, put_char, put_text, put_text_centered, put_text_wave
 from game.config.constants import CORES_HUD_FONTE, FONTE_HUD, VERSAO
 
 BRANCO, VERMELHO, VERDE, CINZA, AZUL, AMARELO = 0, 1, 2, 3, 4, 5
@@ -23,12 +23,13 @@ class HUD:
         pg.draw.rect(surf, (8, 8, 8), (0, painel_y, W, 24))
         pg.draw.line(surf, (30, 30, 30), (0, painel_y), (W, painel_y), 1)
 
-        put_text(surf, self.font, f"{nivel}/{total_niveis}", 4, 4, color_idx=BRANCO, sombra=True)
+        put_char(surf, self.font, "È", 4, 4, color_idx=AMARELO)
+        put_text(surf, self.font, f" {nivel}/{total_niveis}", 14, 4, color_idx=BRANCO, sombra=True)
 
         put_text(surf, self.font, "HP", 6, painel_y + 8, color_idx=VERMELHO)
         for i in range(3):
-            cor = (220, 40, 40) if i < player.hp else (40, 15, 15)
-            pg.draw.rect(surf, cor, (24 + (i * 14), painel_y + 8, 10, 8))
+            cor = VERMELHO if i < player.hp else CINZA
+            put_char(surf, self.font, "É", 24 + (i * 12), painel_y + 8, color_idx=cor)
 
         pg.draw.rect(surf, (20, 20, 20), (72, painel_y + 8, 40, 8))
         largura_st = int(40 * max(0.0, min(1.0, player.stamina / 100.0)))
@@ -59,7 +60,8 @@ class HUD:
 
     def draw_menu(self, surf: pg.Surface, titulo: str, opcoes: list[str], selecionada: int, t: float, seed: str = ""):
         surf.fill((10, 10, 12))
-        put_text_wave(surf, self.font, titulo, 40, t, color_idx=VERMELHO)
+        put_text_wave(surf, self.font, titulo, 36, t, color_idx=VERMELHO, escala=3)
+
         y = 100
         for i, texto in enumerate(opcoes):
             ativo = i == selecionada
@@ -67,13 +69,12 @@ class HUD:
             put_text_centered(surf, self.font, prefixo + texto, y, color_idx=BRANCO if ativo else CINZA)
             y += 20
 
-        W = surf.get_width()
-        H = surf.get_height()
+        W, H = surf.get_size()
 
         if seed:
             put_text(surf, self.font, f"SEED {seed}", 4, H - 14, color_idx=CINZA)
 
-        x_versao = W - len(VERSAO) * 7 - 4
+        x_versao = W - medir_texto(self.font, VERSAO) - 4
         put_text(surf, self.font, VERSAO, x_versao, H - 14, color_idx=CINZA)
 
     def draw_fim(self, surf: pg.Surface, mensagem: str, t: float):

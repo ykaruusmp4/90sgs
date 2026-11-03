@@ -12,7 +12,8 @@ class Clock:
         self.max_dt = max_dt
 
     def tick(self) -> float:
-        return min(self._clock.tick(self.target_fps) / 1000.0, self.max_dt)
+        dt_ms = self._clock.tick(self.target_fps)
+        return min(dt_ms / 1000.0, self.max_dt)
 
     @property
     def fps(self) -> int:

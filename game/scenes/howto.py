@@ -18,12 +18,12 @@ class HowToScene(Scene):
     def handle_event(self, event: pg.event.Event) -> None:
         if event.type == pg.KEYDOWN:
             if event.key == pg.K_ESCAPE:
-                self.app.change_scene("MENU")
+                self.app.scene_manager.change("MENU")
             elif event.key in (pg.K_RETURN, pg.K_KP_ENTER):
                 if self.app.audio:
                     self.app.audio.tocar("select")
-                self.app.scenes["JOGO"].iniciar_novo_jogo()
-                self.app.change_scene("JOGO")
+                self.app.scene_manager.scenes["JOGO"].world.iniciar_novo_jogo()
+                self.app.scene_manager.change("JOGO")
 
     def draw(self, surface: pg.Surface) -> None:
         t = pg.time.get_ticks() / 1000.0

@@ -13,14 +13,16 @@ def main():
         window_scale=C.ESCALE,
         shader_vertex=str(C.SHADER_VS),
         shader_fragment=str(C.SHADER_POST),
+        target_fps=0,
     )
 
     app.hud = HUD()
     app.audio = init_audio()
 
     for name, scene in build_scenes(app).items():
-        app.register_scene(name, scene)
-    app.change_scene("MENU")
+        app.scene_manager.register(name, scene)
+
+    app.scene_manager.change("MENU")
     app.run()
 
 

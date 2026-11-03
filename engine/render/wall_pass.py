@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import concurrent.futures
 import math
 
 import pygame as pg
@@ -12,6 +13,23 @@ from ..world.grid import Grid
 from .shading import wall_fog
 from .zbuffer import INF, ZBuffer
 
+_POOL = None
+
+
+def _get_pool():
+    global _POOL
+    if _POOL is None:
+        _POOL = concurrent.futures.ThreadPoolExecutor(max_workers=4)
+    return _POOL
+
+
+def _calcular_bloco(grid, camera, x_inicio, x_fim, screen_w):
+    resultados = []
+    for x in range(x_inicio, x_fim):
+        hit = cast_column(grid, camera, x, screen_w)
+        resultados.append((x, hit))
+    return resultados
+
 
 def draw(
     surf: pg.Surface,
@@ -23,6 +41,7 @@ def draw(
     bob_y: float = 0.0,
     tilt: float = 0.0,
     margin: int = 24,
+    multithread: bool = False,
 ) -> None:
     w = surf.get_width()
     h = surf.get_height()
@@ -32,13 +51,35 @@ def draw(
     meio_x = w / 2.0
     blit = surf.blit
 
-    for x in range(w):
-        hit = cast_column(grid, camera, x, w)
-        if hit is None:
-            zbuffer[x] = INF
-            continue
-        zbuffer[x] = hit.perp
-        _draw_column(surf, hit, x, w, h, tex_w, tex_h, bob_y, tilt, limit, meio_x, texture, blit)
+    if multithread:
+        pool = _get_pool()
+        chunk = w // 4
+        futuros = []
+        for i in range(4):
+            inicio = i * chunk
+            fim = w if i == 3 else (i + 1) * chunk
+            futuros.append(pool.submit(_calcular_bloco, grid, camera, inicio, fim, w))
+
+        resultados = []
+        for f in futuros:
+            resultados.extend(f.result())
+
+        resultados.sort(key=lambda item: item[0])
+
+        for x, hit in resultados:
+            if hit is None:
+                zbuffer[x] = INF
+                continue
+            zbuffer[x] = hit.perp
+            _draw_column(surf, hit, x, w, h, tex_w, tex_h, bob_y, tilt, limit, meio_x, texture, blit)
+    else:
+        for x in range(w):
+            hit = cast_column(grid, camera, x, w)
+            if hit is None:
+                zbuffer[x] = INF
+                continue
+            zbuffer[x] = hit.perp
+            _draw_column(surf, hit, x, w, h, tex_w, tex_h, bob_y, tilt, limit, meio_x, texture, blit)
 
 
 def _draw_column(

@@ -29,6 +29,17 @@ class TransitionScene(Scene):
         self.para = 2
         self.carregado = False
 
+    def enter(self) -> None:
+        # Mantém o mouse travado e escondido durante a transição
+        pg.event.set_grab(True)
+        pg.mouse.set_visible(False)
+        pg.mouse.get_rel()  # Limpa o acumulado
+
+    def exit(self) -> None:
+        # Libera o mouse ao sair (a próxima cena vai decidir se prende de novo)
+        pg.event.set_grab(False)
+        pg.mouse.set_visible(True)
+
     def iniciar(self, de: int, para: int) -> None:
         self.t = 0.0
         self.de = de
@@ -37,20 +48,20 @@ class TransitionScene(Scene):
 
     def handle_event(self, event: pg.event.Event) -> None:
         if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
-            self.app.change_scene("MENU")
+            self.app.scene_manager.change("MENU")
 
     def update(self, dt: float) -> None:
         self.t += dt
         if not self.carregado and self.t >= T_INICIO_PRETO:
-            self.app.scenes["JOGO"].load_level(self.para)
+            self.app.scene_manager.scenes["JOGO"].world.load_level(self.para)
             if self.app.audio:
                 self.app.audio.tocar("nivel")
             self.carregado = True
         if self.t >= T_TOTAL:
-            self.app.change_scene("JOGO")
+            self.app.scene_manager.change("JOGO")
 
     def _cena(self, surface: pg.Surface, brilho: float) -> None:
-        self.app.scenes["JOGO"].draw(surface)
+        self.app.scene_manager.scenes["JOGO"].draw(surface)
         v = int(255 * max(0.0, min(1.0, brilho)))
         if v < 255:
             surface.fill((v, v, v), special_flags=pg.BLEND_RGB_MULT)

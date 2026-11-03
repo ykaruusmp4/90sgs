@@ -81,6 +81,7 @@ class ShaderPipeline:
         self._uniform("u_aberracao", 0.0)
         self._uniform("u_perigo", 0.0)
         self._uniform("u_dither", 1.0)
+        self._uniform("u_glitch", 0.0)
 
     def _uniform(self, nome: str, valor) -> None:
         if nome in self.programa:

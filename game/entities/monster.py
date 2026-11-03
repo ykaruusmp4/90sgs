@@ -181,7 +181,7 @@ class Monster(Entity):
             self.wander_timer = random.uniform(WANDER_PAUSA_MIN, WANDER_PAUSA_MAX)
         return self.wander_x, self.wander_y
 
-    def update(self, dt: float, player, flowfield, peers, grid) -> None:
+    def update(self, dt: float, player, flowfield, peers, grid, speed_mult: float = 1.0) -> None:
         viu = self._pode_ver(player, grid)
         if viu:
             self.estado = HUNTING
@@ -196,10 +196,10 @@ class Monster(Entity):
 
         if self.estado == HUNTING:
             alvo_x, alvo_y = self._alvo_caca(player, flowfield)
-            vel = VEL_MONSTRO
+            vel = VEL_MONSTRO * speed_mult
         else:
             alvo_x, alvo_y = self._alvo_wander(dt, grid)
-            vel = VEL_MONSTRO * MONSTER_WANDER_VEL_FRAC
+            vel = VEL_MONSTRO * MONSTER_WANDER_VEL_FRAC * speed_mult
 
         dx = alvo_x - self.x
         dy = alvo_y - self.y

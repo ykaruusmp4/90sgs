@@ -1,13 +1,16 @@
+"""Orquestrador: janela, framebuffer, pipeline, clock, cenas."""
+
 from __future__ import annotations
 
 import pygame as pg
 
+from game.config.settings import GameSettings
+
 from ..render.framebuffer import FrameBuffer
 from ..render.pipeline import ShaderPipeline
 from .clock import Clock
-from .errors import SceneError
 from .loop import run as run_loop
-from .scene import Scene
+from .scene_manager import SceneManager
 
 
 class App:
@@ -28,43 +31,54 @@ class App:
         pg.mixer.pre_init(22050, -16, 1, 512)
         pg.init()
 
-        pg.display.set_caption(title)
-        pg.display.set_mode(
-            (virtual_width * window_scale, virtual_height * window_scale),
-            pg.OPENGL | pg.DOUBLEBUF | pg.RESIZABLE,
-            vsync=1,
-        )
+        self.title = title
+        self.virtual_width = virtual_width
+        self.virtual_height = virtual_height
+        self.window_scale = window_scale
+        self.shader_vertex = shader_vertex
+        self.shader_fragment = shader_fragment
+
+        self.settings = GameSettings()
+
+        pg.display.set_caption(self.title)
+        self._criar_janela()
 
         self.framebuffer = FrameBuffer(virtual_width, virtual_height)
         self.pipeline = ShaderPipeline(virtual_width, virtual_height, shader_vertex, shader_fragment)
-        self.clock = Clock(target_fps, max_dt)
+
+        self.clock = Clock(self.settings.fps_limit_value if self.settings.fps_limit_value > 0 else target_fps, max_dt)
 
         self.audio = audio
         self.hud = hud
+        self.seed = ""
 
-        self.scenes: dict[str, Scene] = {}
-        self.scene: Scene | None = None
+        self.scene_manager = SceneManager(fallback_name="MENU")
 
-        self.crt_on = True
         self.aberracao = 0.0
         self.perigo = 0.0
+        self.glitch = 0.0
 
         self.running = True
 
-    def register_scene(self, name: str, scene: Scene) -> None:
-        if name in self.scenes:
-            raise SceneError(f"cena duplicada: {name!r}")
-        self.scenes[name] = scene
+    def _criar_janela(self) -> None:
+        flags = pg.OPENGL | pg.DOUBLEBUF | pg.RESIZABLE
+        vsync_val = 1 if self.settings.vsync else 0
+        w = self.virtual_width * self.window_scale
+        h = self.virtual_height * self.window_scale
 
-    def change_scene(self, name: str) -> None:
-        if name not in self.scenes:
-            raise SceneError(f"cena não registrada: {name!r}")
+        pg.display.set_mode((w, h), flags, vsync=vsync_val)
 
-        if self.scene is not None:
-            self.scene.exit()
+    def apply_video_settings(self) -> None:
+        self.clock.target_fps = self.settings.fps_limit_value
 
-        self.scene = self.scenes[name]
-        self.scene.enter()
+        self._criar_janela()
+
+        try:
+            self.pipeline = ShaderPipeline(
+                self.virtual_width, self.virtual_height, self.shader_vertex, self.shader_fragment
+            )
+        except Exception as e:
+            print(f"[Erro] Não foi possível recriar o pipeline OpenGL: {e}")
 
     def stop(self) -> None:
         self.running = False
@@ -72,24 +86,25 @@ class App:
     def frame(self, dt: float) -> None:
         self.aberracao = 0.0
         self.perigo = 0.0
+        self.glitch = 0.0
 
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 self.stop()
             elif event.type == pg.KEYDOWN and event.key == pg.K_m and self.audio is not None:
                 self.audio.alternar_mudo()
-            elif self.scene is not None:
-                self.scene.handle_event(event)
+            else:
+                self.scene_manager.handle_event(event)
 
-        if self.scene is not None:
-            self.scene.update(dt)
-            self.scene.draw(self.framebuffer.surface)
+        self.scene_manager.update(dt)
+        self.scene_manager.draw(self.framebuffer.surface)
 
         self.pipeline.render(
             self.framebuffer.surface,
-            u_crt=1.0 if self.crt_on else 0.0,
+            u_crt=1.0 if self.settings.crt_on else 0.0,
             u_aberracao=float(self.aberracao),
             u_perigo=float(self.perigo),
+            u_glitch=float(self.glitch),
         )
 
     def run(self) -> None:

@@ -72,7 +72,7 @@ class VictoryScene(Scene):
         if self.t < 0.5:
             return
         if event.type == pg.KEYDOWN and event.key in (pg.K_RETURN, pg.K_KP_ENTER, pg.K_ESCAPE):
-            self.app.change_scene("MENU")
+            self.app.scene_manager.change("MENU")
 
     def update(self, dt: float) -> None:
         self.t += dt
